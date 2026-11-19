@@ -1,0 +1,16 @@
+{
+    "name": "smithy/auth",
+    "description": "Authentication schemes, identities, and signers for Smithy PHP.",
+    "type": "library",
+    "license": "Apache-2.0",
+    "require": {
+        "php": ">=8.2",
+        "smithy/core": "self.version",
+        "smithy/http": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "Smithy\\Auth\\": ""
+        }
+    }
+}

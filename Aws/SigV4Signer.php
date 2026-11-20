@@ -24,7 +24,8 @@ use Smithy\Http\Message\HttpTransportRequest;
  *
  *   - Verifies the resolved identity is an {@see AwsCredentialsIdentityInterface}.
  *   - Reads optional signing overrides out of `$properties`
- *     (`signingName`, `signingRegion`, `unsignedPayload`, `timestamp`)
+ *     (`signingName`, `signingRegion`, `unsignedPayload`,
+ *     `streamingUnsignedTrailer`, `timestamp`)
  *     — these come from a resolved endpoint's auth-scheme entry or from
  *     per-operation static context.
  *   - Delegates to a fresh `SignatureV4` instance sized to the effective
@@ -62,6 +63,9 @@ final class SigV4Signer implements SignerInterface
         $options = [];
         if (($properties['unsignedPayload'] ?? null) === true) {
             $options['unsigned_payload'] = true;
+        }
+        if (($properties['streamingUnsignedTrailer'] ?? null) === true) {
+            $options['streaming_unsigned_trailer'] = true;
         }
         if (isset($properties['timestamp'])
             && \is_int($properties['timestamp'])

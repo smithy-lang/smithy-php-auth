@@ -81,9 +81,14 @@ final class SignatureV4
      * `X-Amz-Content-Sha256`, and (if applicable) `X-Amz-Security-Token`
      * headers.
      *
+     * `streaming_unsigned_trailer` signs with the
+     * `STREAMING-UNSIGNED-PAYLOAD-TRAILER` content hash for `aws-chunked`
+     * bodies prepared by {@see AwsChunkedTrailer::applyUnsigned()}.
+     *
      * @param array{
      *     timestamp?: int,
      *     unsigned_payload?: bool,
+     *     streaming_unsigned_trailer?: bool,
      * } $options
      */
     public function signRequest(
@@ -231,13 +236,20 @@ final class SignatureV4
     }
 
     /**
-     * @param array{unsigned_payload?: bool} $options
+     * @param array{
+     *     unsigned_payload?: bool,
+     *     streaming_unsigned_trailer?: bool,
+     * } $options
      */
     private function getContentHash(
         RequestInterface $request,
         array $options,
     ): string
     {
+        if (!empty($options['streaming_unsigned_trailer'])) {
+            return AwsChunkedTrailer::STREAMING_UNSIGNED_PAYLOAD_TRAILER;
+        }
+
         if (!empty($options['unsigned_payload'])) {
             return 'UNSIGNED-PAYLOAD';
         }

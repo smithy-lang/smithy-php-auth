@@ -13,6 +13,7 @@ use Smithy\Auth\AuthSchemeInterface;
 use Smithy\Auth\IdentityResolverInterface;
 use Smithy\Auth\IdentityResolversInterface;
 use Smithy\Auth\SignerInterface;
+use Smithy\Core\Shape\OperationInterface;
 
 /**
  * Smithy auth scheme wrapping AWS SigV4 (`aws.auth#sigv4`).
@@ -31,6 +32,11 @@ final class SigV4AuthScheme implements AuthSchemeInterface
      * client config builds.
      */
     public const IDENTITY_CONTEXT_KEY = 'aws.identityContext';
+
+    /**
+     * Operation trait requesting an unsigned request payload over HTTPS.
+     */
+    public const UNSIGNED_PAYLOAD_TRAIT = 'aws.auth#unsignedPayload';
 
     public function __construct(
         private readonly string $signingName,
@@ -64,12 +70,22 @@ final class SigV4AuthScheme implements AuthSchemeInterface
      * @param array<string, mixed> $context
      * @return array<string, mixed>
      */
-    public function getSignerProperties(array $context): array
+    public function getSignerProperties(
+        array $context,
+        ?OperationInterface $operation = null
+    ): array
     {
-        return [
+        $properties = [
             'signingName' => $this->signingName,
             'signingRegion' => $this->signingRegion,
         ];
+        if ($operation?->getSchema()->hasTraitById(
+            self::UNSIGNED_PAYLOAD_TRAIT
+        )) {
+            $properties['unsignedPayload'] = true;
+        }
+
+        return $properties;
     }
 
     public function getSigner(): SignerInterface

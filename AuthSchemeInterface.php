@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Smithy\Auth;
 
+use Smithy\Core\Shape\OperationInterface;
+
 /**
  * Named authentication scheme: identity resolver plus signer.
  *
@@ -55,9 +57,14 @@ interface AuthSchemeInterface
      * Return default properties used to sign a request.
      *
      * @param array<string, mixed> $context Client context bag.
+     * @param OperationInterface|null $operation Operation being signed, when
+     *     the caller resolves properties for one.
      * @return array<string, mixed>
      */
-    public function getSignerProperties(array $context): array;
+    public function getSignerProperties(
+        array $context,
+        ?OperationInterface $operation = null
+    ): array;
 
     /**
      * Return the signer for this scheme.

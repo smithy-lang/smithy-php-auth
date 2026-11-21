@@ -61,7 +61,11 @@ final class SigV4Signer implements SignerInterface
         );
 
         $options = [];
-        if (($properties['unsignedPayload'] ?? null) === true) {
+        // The payload is left unsigned only over HTTPS. Plain HTTP always
+        // signs the body so the request keeps its integrity.
+        if (($properties['unsignedPayload'] ?? null) === true
+            && \strtolower($httpRequest->getUri()->getScheme()) === 'https'
+        ) {
             $options['unsigned_payload'] = true;
         }
         if (($properties['streamingUnsignedTrailer'] ?? null) === true) {

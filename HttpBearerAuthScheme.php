@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Smithy\Auth;
 
+use Smithy\Core\Shape\OperationInterface;
+
 /**
  * Provide the Smithy HTTP bearer authentication scheme.
  */
@@ -49,7 +51,10 @@ final readonly class HttpBearerAuthScheme implements AuthSchemeInterface
     }
 
     /** @inheritDoc */
-    public function getSignerProperties(array $context): array
+    public function getSignerProperties(
+        array $context,
+        ?OperationInterface $operation = null
+    ): array
     {
         return [];
     }

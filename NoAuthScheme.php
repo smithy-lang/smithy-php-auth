@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Smithy\Auth;
 
+use Smithy\Core\Shape\OperationInterface;
+
 /**
  * The `smithy.api#noAuth` scheme: anonymous identity plus null signer.
  *
@@ -52,7 +54,10 @@ final class NoAuthScheme implements AuthSchemeInterface
     }
 
     /** @inheritDoc */
-    public function getSignerProperties(array $context): array
+    public function getSignerProperties(
+        array $context,
+        ?OperationInterface $operation = null
+    ): array
     {
         return [];
     }

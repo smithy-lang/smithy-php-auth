@@ -121,8 +121,7 @@ final class SignatureV4
             ];
         }
 
-        if (
-            $request->getHeaderLine('X-Amz-Content-Sha256')
+        if ($request->getHeaderLine('X-Amz-Content-Sha256')
                 !== $contentHash
         ) {
             $headers['x-amz-content-sha256'] = [
@@ -200,7 +199,8 @@ final class SignatureV4
         AwsCredentialsIdentityInterface $credentials,
         int $expires,
         array $options = [],
-    ): RequestInterface {
+    ): RequestInterface
+    {
         $expires = min($expires, 604800); // AWS maximum is 7 days.
         $timestamp = $options['timestamp'] ?? time();
         $dateTime = gmdate('Ymd\THis\Z', $timestamp);
@@ -450,7 +450,8 @@ final class SignatureV4
         string $dateTime,
         string $credentialScope,
         string $canonicalRequest,
-    ): string {
+    ): string
+    {
         return implode("\n", [
             self::ALGORITHM,
             $dateTime,

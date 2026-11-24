@@ -88,8 +88,6 @@ final class ChainSetup
     /**
      * Set the provider whose resolver registrations are being collected.
      *
-     * @internal
-     *
      * @param ChainIdentityProviderInterface<TIdentity> $provider
      * @return void
      */

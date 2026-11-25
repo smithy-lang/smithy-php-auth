@@ -79,8 +79,8 @@ final class CachingIdentityResolver implements IdentityResolverInterface
      * @param int|null $refreshWindowSeconds Advisory window: start
      *     refreshing this many seconds before expiration. Null derives it
      *     from the identity lifetime.
-     * @param null|callable(TIdentity, IdentityInterface): bool
-     *     $identityMatcher Compare the cached identity to a rejected identity.
+     * @param null|callable(TIdentity, IdentityInterface): bool $identityMatcher
+     *     Compare the cached identity to a rejected identity.
      * @param null|callable(): float $clock Return the current Unix time in
      *     seconds. Null reads `\microtime(true)`.
      * @param null|callable(): float $backoffJitter Return the refresh backoff

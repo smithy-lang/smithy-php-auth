@@ -53,8 +53,8 @@ final class IdentityChain implements IdentityChainInterface
      * @param list<ChainIdentityProviderInterface<TIdentity>> $providers
      * @param list<string> $slotOrder
      * @param array<string, mixed> $properties
-     * @param null|callable(TIdentity, IdentityInterface): bool
-     *     $identityMatcher Compare the cached identity to a rejected identity.
+     * @param null|callable(TIdentity, IdentityInterface): bool $identityMatcher
+     *     Compare the cached identity to a rejected identity.
      */
     public function __construct(
         array $providers,

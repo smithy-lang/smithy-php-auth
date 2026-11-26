@@ -28,6 +28,7 @@ interface IdentityResolversInterface
      * Return the resolver registered for an identity type, or null.
      *
      * @param class-string<IdentityInterface> $identityClass
+     * @return IdentityResolverInterface<IdentityInterface>|null
      */
     public function identityResolver(
         string $identityClass

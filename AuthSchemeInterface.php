@@ -48,6 +48,8 @@ interface AuthSchemeInterface
      *
      * A null return marks the scheme unusable for the request; the resolver
      * then moves on to the next option.
+     *
+     * @return IdentityResolverInterface<IdentityInterface>|null
      */
     public function getIdentityResolver(
         IdentityResolversInterface $resolvers

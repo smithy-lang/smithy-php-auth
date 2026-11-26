@@ -20,6 +20,7 @@ final readonly class ResolvedAuthScheme
     /**
      * @param array<string, mixed> $identityProperties
      * @param array<string, mixed> $signerProperties
+     * @param IdentityResolverInterface<IdentityInterface>|null $identityResolver
      */
     public function __construct(
         public AuthSchemeInterface $scheme,

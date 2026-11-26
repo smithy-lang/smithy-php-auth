@@ -45,7 +45,10 @@ final class NoAuthScheme implements AuthSchemeInterface
         return [];
     }
 
-    /** @inheritDoc */
+    /**
+     * @inheritDoc
+     * @return IdentityResolverInterface<IdentityInterface>
+     */
     public function getIdentityResolver(
         IdentityResolversInterface $resolvers
     ): IdentityResolverInterface

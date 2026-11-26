@@ -18,11 +18,11 @@ namespace Smithy\Auth;
  */
 final class IdentityResolvers implements IdentityResolversInterface
 {
-    /** @var array<class-string<IdentityInterface>, IdentityResolverInterface> */
+    /** @var array<class-string<IdentityInterface>, IdentityResolverInterface<IdentityInterface>> */
     private array $resolvers;
 
     /**
-     * @param array<class-string<IdentityInterface>, IdentityResolverInterface> $resolvers
+     * @param array<class-string<IdentityInterface>, IdentityResolverInterface<IdentityInterface>> $resolvers
      *        Resolvers keyed by the identity type they resolve.
      */
     public function __construct(array $resolvers = [])
@@ -34,6 +34,7 @@ final class IdentityResolvers implements IdentityResolversInterface
      * Return a copy with `$resolver` registered for `$identityClass`.
      *
      * @param class-string<IdentityInterface> $identityClass
+     * @param IdentityResolverInterface<IdentityInterface> $resolver
      */
     public function with(
         string $identityClass,
@@ -45,7 +46,10 @@ final class IdentityResolvers implements IdentityResolversInterface
         );
     }
 
-    /** @inheritDoc */
+    /**
+     * @inheritDoc
+     * @return IdentityResolverInterface<IdentityInterface>|null
+     */
     public function identityResolver(
         string $identityClass
     ): ?IdentityResolverInterface

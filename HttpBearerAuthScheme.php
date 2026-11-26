@@ -24,6 +24,8 @@ final readonly class HttpBearerAuthScheme implements AuthSchemeInterface
      * When `$tokenProvider` is null the scheme looks up a {@see BearerToken}
      * resolver from the {@see IdentityResolversInterface} supplied at
      * resolution time, mirroring smithy-java.
+     *
+     * @param IdentityResolverInterface<IdentityInterface>|null $tokenProvider
      */
     public function __construct(
         private ?IdentityResolverInterface $tokenProvider = null
@@ -41,7 +43,10 @@ final readonly class HttpBearerAuthScheme implements AuthSchemeInterface
         return [];
     }
 
-    /** @inheritDoc */
+    /**
+     * @inheritDoc
+     * @return IdentityResolverInterface<IdentityInterface>|null
+     */
     public function getIdentityResolver(
         IdentityResolversInterface $resolvers
     ): ?IdentityResolverInterface

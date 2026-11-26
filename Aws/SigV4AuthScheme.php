@@ -57,6 +57,9 @@ final class SigV4AuthScheme implements AuthSchemeInterface
         return $context[self::IDENTITY_CONTEXT_KEY] ?? [];
     }
 
+    /**
+     * @return IdentityResolverInterface<\Smithy\Auth\IdentityInterface>|null
+     */
     public function getIdentityResolver(
         IdentityResolversInterface $resolvers
     ): ?IdentityResolverInterface

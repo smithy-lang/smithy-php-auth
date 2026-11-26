@@ -12,7 +12,7 @@ namespace Smithy\Auth;
 /**
  * Successful identity resolution or an expected identity-specific miss.
  *
- * @template-covariant TIdentity of IdentityInterface
+ * @template-covariant TIdentity of IdentityInterface = never
  */
 final readonly class IdentityResult
 {

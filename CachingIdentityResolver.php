@@ -130,16 +130,20 @@ final class CachingIdentityResolver implements IdentityResolverInterface
     /** @inheritDoc */
     public function resolveIdentity(array $properties = []): IdentityResult
     {
-        if ($this->cached === null || $this->cachedProperties !== $properties) {
+        $cached = $this->cached;
+        if ($cached === null
+            || $cached->identity === null
+            || $this->cachedProperties !== $properties
+        ) {
             return $this->fetchInitial($properties);
         }
 
-        if (!$this->refreshNeeded($this->cached->identity)) {
-            return $this->cached;
+        if (!$this->refreshNeeded($cached->identity)) {
+            return $cached;
         }
 
         if ($this->rateLimited()) {
-            return $this->cached;
+            return $cached;
         }
 
         // A reentrant call returns the identity the running refresh is
@@ -147,10 +151,10 @@ final class CachingIdentityResolver implements IdentityResolverInterface
         // Mandatory and advisory refreshes share this path because a
         // single-threaded caller cannot wait on the running refresh.
         if ($this->refreshing) {
-            return $this->cached;
+            return $cached;
         }
 
-        return $this->refresh($properties);
+        return $this->refresh($properties, $cached);
     }
 
     /**
@@ -166,11 +170,9 @@ final class CachingIdentityResolver implements IdentityResolverInterface
     /** @inheritDoc */
     public function invalidate(IdentityInterface $rejectedIdentity): void
     {
-        if ($this->cached !== null
-            && ($this->identityMatcher)(
-                $this->cached->identity,
-                $rejectedIdentity
-            )
+        $cachedIdentity = $this->cached?->identity;
+        if ($cachedIdentity !== null
+            && ($this->identityMatcher)($cachedIdentity, $rejectedIdentity)
         ) {
             $this->refreshRequired = true;
         }
@@ -215,9 +217,13 @@ final class CachingIdentityResolver implements IdentityResolverInterface
      * Refresh a cached identity. Failures return the cached identity.
      *
      * @param array<string, mixed> $properties
+     * @param IdentityResult<TIdentity> $cached Result to keep on failure.
      * @return IdentityResult<TIdentity>
      */
-    private function refresh(array $properties): IdentityResult
+    private function refresh(
+        array $properties,
+        IdentityResult $cached
+    ): IdentityResult
     {
         $this->raiseCachedError();
 
@@ -242,7 +248,7 @@ final class CachingIdentityResolver implements IdentityResolverInterface
             $this->nextRefreshAllowedAt = ($this->clock)()
                 + ($this->backoffJitter)();
 
-            return $this->cached;
+            return $cached;
         }
 
         $this->store($result, $properties);
@@ -278,10 +284,9 @@ final class CachingIdentityResolver implements IdentityResolverInterface
 
     private function raiseCachedError(): void
     {
-        if ($this->cachedError !== null
-            && ($this->clock)() < $this->cachedErrorExpiresAt
-        ) {
-            throw $this->cachedError;
+        $error = $this->cachedError;
+        if ($error !== null && ($this->clock)() < $this->cachedErrorExpiresAt) {
+            throw $error;
         }
     }
 

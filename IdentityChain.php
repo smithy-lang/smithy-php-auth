@@ -88,12 +88,14 @@ final class IdentityChain implements IdentityChainInterface
     /** @inheritDoc */
     public function resolveIdentity(array $properties = []): IdentityResult
     {
-        if ($this->cachedResult !== null
+        $cached = $this->cachedResult;
+        if ($cached !== null
+            && $cached->identity !== null
             && $this->cachedIdentityProperties === $properties
             && !$this->refreshRequired
-            && !$this->requiresRefresh($this->cachedResult->identity)
+            && !$this->requiresRefresh($cached->identity)
         ) {
-            return $this->cachedResult;
+            return $cached;
         }
 
         if ($this->registrations === []) {
@@ -139,11 +141,9 @@ final class IdentityChain implements IdentityChainInterface
     /** @inheritDoc */
     public function invalidate(IdentityInterface $rejectedIdentity): void
     {
-        if ($this->cachedResult !== null
-            && ($this->identityMatcher)(
-                $this->cachedResult->identity,
-                $rejectedIdentity
-            )
+        $cachedIdentity = $this->cachedResult?->identity;
+        if ($cachedIdentity !== null
+            && ($this->identityMatcher)($cachedIdentity, $rejectedIdentity)
         ) {
             $this->refreshRequired = true;
         }

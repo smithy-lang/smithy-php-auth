@@ -17,14 +17,17 @@ use Smithy\Core\Shape\SensitiveDataRedactor;
  */
 final readonly class BearerToken implements IdentityInterface, JsonSerializable
 {
+    /** @var non-empty-string */
+    private string $token;
+
     /**
      * Create a bearer token.
      *
-     * @param non-empty-string $token
+     * @throws \InvalidArgumentException When the token is empty.
      */
     public function __construct(
         #[\SensitiveParameter]
-        private string $token,
+        string $token,
         private ?float $expirationTime = null
     )
     {
@@ -33,6 +36,7 @@ final readonly class BearerToken implements IdentityInterface, JsonSerializable
                 'Bearer token must not be empty.'
             );
         }
+        $this->token = $token;
     }
 
     /**

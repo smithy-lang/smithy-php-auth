@@ -14,12 +14,16 @@ namespace Smithy\Auth;
  */
 final class ResolvedIdentityMetadata
 {
+    /** @var non-empty-string Canonical provider name. */
+    public readonly string $providerName;
+
     /**
-     * @param non-empty-string $providerName Canonical provider name.
+     * @param string $providerName Canonical provider name.
      * @param list<string> $featureIds Provider feature IDs.
+     * @throws \InvalidArgumentException When the provider name is empty.
      */
     public function __construct(
-        public readonly string $providerName,
+        string $providerName,
         public readonly array $featureIds = []
     )
     {
@@ -28,5 +32,6 @@ final class ResolvedIdentityMetadata
                 'providerName must not be empty.'
             );
         }
+        $this->providerName = $providerName;
     }
 }

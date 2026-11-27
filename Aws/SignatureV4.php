@@ -470,7 +470,7 @@ final class SignatureV4
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<array-key, mixed> Numeric names such as `1` become int keys.
      */
     private function parseQueryString(string $query): array
     {
